@@ -11,6 +11,7 @@
 #include "../ClangTidyModuleRegistry.h"
 #include "ConfusableIdentifierCheck.h"
 #include "ConstCorrectnessCheck.h"
+#include "CorrectIncludeNameCheck.h"
 #include "DefinitionsInHeadersCheck.h"
 #include "HeaderIncludeCycleCheck.h"
 #include "IncludeCleanerCheck.h"
@@ -22,6 +23,7 @@
 #include "NonCopyableObjects.h"
 #include "NonPrivateMemberVariablesInClassesCheck.h"
 #include "RedundantExpressionCheck.h"
+#include "ReplaceCstringSlicingCheck.h"
 #include "StaticAssertCheck.h"
 #include "ThrowByValueCatchByReferenceCheck.h"
 #include "UnconventionalAssignOperatorCheck.h"
@@ -41,6 +43,8 @@ public:
         "misc-confusable-identifiers");
     CheckFactories.registerCheck<ConstCorrectnessCheck>(
         "misc-const-correctness");
+    CheckFactories.registerCheck<CorrectIncludeNameCheck>(
+        "misc-correct-include-name");
     CheckFactories.registerCheck<DefinitionsInHeadersCheck>(
         "misc-definitions-in-headers");
     CheckFactories.registerCheck<HeaderIncludeCycleCheck>(
@@ -60,6 +64,8 @@ public:
         "misc-non-private-member-variables-in-classes");
     CheckFactories.registerCheck<RedundantExpressionCheck>(
         "misc-redundant-expression");
+    CheckFactories.registerCheck<ReplaceCstringSlicingCheck>(
+        "misc-replace-cstring-slicing");
     CheckFactories.registerCheck<StaticAssertCheck>("misc-static-assert");
     CheckFactories.registerCheck<ThrowByValueCatchByReferenceCheck>(
         "misc-throw-by-value-catch-by-reference");

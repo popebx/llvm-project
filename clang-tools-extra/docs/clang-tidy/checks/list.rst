@@ -92,7 +92,6 @@ Clang-Tidy Checks
    `bugprone-forwarding-reference-overload <bugprone/forwarding-reference-overload.html>`_,
    `bugprone-implicit-widening-of-multiplication-result <bugprone/implicit-widening-of-multiplication-result.html>`_, "Yes"
    `bugprone-inaccurate-erase <bugprone/inaccurate-erase.html>`_, "Yes"
-   `bugprone-switch-missing-default-case <bugprone/switch-missing-default-case.html>`_,
    `bugprone-incorrect-roundings <bugprone/incorrect-roundings.html>`_,
    `bugprone-infinite-loop <bugprone/infinite-loop.html>`_,
    `bugprone-integer-division <bugprone/integer-division.html>`_,
@@ -132,6 +131,7 @@ Clang-Tidy Checks
    `bugprone-suspicious-semicolon <bugprone/suspicious-semicolon.html>`_, "Yes"
    `bugprone-suspicious-string-compare <bugprone/suspicious-string-compare.html>`_, "Yes"
    `bugprone-swapped-arguments <bugprone/swapped-arguments.html>`_, "Yes"
+   `bugprone-switch-missing-default-case <bugprone/switch-missing-default-case.html>`_,
    `bugprone-terminating-continue <bugprone/terminating-continue.html>`_, "Yes"
    `bugprone-throw-keyword-missing <bugprone/throw-keyword-missing.html>`_,
    `bugprone-too-small-loop-variable <bugprone/too-small-loop-variable.html>`_,
@@ -255,6 +255,7 @@ Clang-Tidy Checks
    `llvmlibc-restrict-system-libc-headers <llvmlibc/restrict-system-libc-headers.html>`_, "Yes"
    `misc-confusable-identifiers <misc/confusable-identifiers.html>`_,
    `misc-const-correctness <misc/const-correctness.html>`_, "Yes"
+   `misc-correct-include-name <misc/correct-include-name.html>`_, "Yes"
    `misc-definitions-in-headers <misc/definitions-in-headers.html>`_, "Yes"
    `misc-header-include-cycle <misc/header-include-cycle.html>`_,
    `misc-include-cleaner <misc/include-cleaner.html>`_, "Yes"
@@ -266,6 +267,7 @@ Clang-Tidy Checks
    `misc-non-copyable-objects <misc/non-copyable-objects.html>`_,
    `misc-non-private-member-variables-in-classes <misc/non-private-member-variables-in-classes.html>`_,
    `misc-redundant-expression <misc/redundant-expression.html>`_, "Yes"
+   `misc-replace-cstring-slicing <misc/replace-cstring-slicing.html>`_, "Yes"
    `misc-static-assert <misc/static-assert.html>`_, "Yes"
    `misc-throw-by-value-catch-by-reference <misc/throw-by-value-catch-by-reference.html>`_,
    `misc-unconventional-assign-operator <misc/unconventional-assign-operator.html>`_,
@@ -332,9 +334,9 @@ Clang-Tidy Checks
    `performance-move-constructor-init <performance/move-constructor-init.html>`_,
    `performance-no-automatic-move <performance/no-automatic-move.html>`_,
    `performance-no-int-to-ptr <performance/no-int-to-ptr.html>`_,
-   `performance-noexcept-destructor <performance/noexcept-destructor.html>`_, "Yes"
-   `performance-noexcept-move-constructor <performance/noexcept-move-constructor.html>`_, "Yes"
-   `performance-noexcept-swap <performance/noexcept-swap.html>`_, "Yes"
+   `performance-noexcept-destructor <performance/noexcept-destructor.html>`_,
+   `performance-noexcept-move-constructor <performance/noexcept-move-constructor.html>`_,
+   `performance-noexcept-swap <performance/noexcept-swap.html>`_,
    `performance-trivially-destructible <performance/trivially-destructible.html>`_, "Yes"
    `performance-type-promotion-in-math-fn <performance/type-promotion-in-math-fn.html>`_, "Yes"
    `performance-unnecessary-copy-initialization <performance/unnecessary-copy-initialization.html>`_, "Yes"
@@ -486,11 +488,11 @@ Clang-Tidy Checks
    `cppcoreguidelines-c-copy-assignment-signature <cppcoreguidelines/c-copy-assignment-signature.html>`_, `misc-unconventional-assign-operator <misc/unconventional-assign-operator.html>`_,
    `cppcoreguidelines-explicit-virtual-functions <cppcoreguidelines/explicit-virtual-functions.html>`_, `modernize-use-override <modernize/use-override.html>`_, "Yes"
    `cppcoreguidelines-macro-to-enum <cppcoreguidelines/macro-to-enum.html>`_, `modernize-macro-to-enum <modernize/macro-to-enum.html>`_, "Yes"
-   `cppcoreguidelines-noexcept-destructor <cppcoreguidelines/noexcept-destructor.html>`_, `performance-noexcept-destructor <performance/noexcept-destructor.html>`_, "Yes"
-   `cppcoreguidelines-noexcept-move-operations <cppcoreguidelines/noexcept-move-operations.html>`_, `performance-noexcept-move-constructor <performance/noexcept-move-constructor.html>`_, "Yes"
-   `cppcoreguidelines-noexcept-swap <cppcoreguidelines/noexcept-swap.html>`_, `performance-noexcept-swap <performance/noexcept-swap.html>`_, "Yes"
+   `cppcoreguidelines-noexcept-destructor <cppcoreguidelines/noexcept-destructor.html>`_, `performance-noexcept-destructor <performance/noexcept-destructor.html>`_,
+   `cppcoreguidelines-noexcept-move-operations <cppcoreguidelines/noexcept-move-operations.html>`_, `performance-noexcept-move-constructor <performance/noexcept-move-constructor.html>`_,
+   `cppcoreguidelines-noexcept-swap <cppcoreguidelines/noexcept-swap.html>`_, `performance-noexcept-swap <performance/noexcept-swap.html>`_,
    `cppcoreguidelines-non-private-member-variables-in-classes <cppcoreguidelines/non-private-member-variables-in-classes.html>`_, `misc-non-private-member-variables-in-classes <misc/non-private-member-variables-in-classes.html>`_,
-   `cppcoreguidelines-use-default-member-init <cppcoreguidelines/use-default-member-init.html>`_, `modernize-use-default-member-init <modernize/use-default-member-init.html>`_,
+   `cppcoreguidelines-use-default-member-init <cppcoreguidelines/use-default-member-init.html>`_, `modernize-use-default-member-init <modernize/use-default-member-init.html>`_, "Yes"
    `fuchsia-header-anon-namespaces <fuchsia/header-anon-namespaces.html>`_, `google-build-namespaces <google/build-namespaces.html>`_,
    `google-readability-braces-around-statements <google/readability-braces-around-statements.html>`_, `readability-braces-around-statements <readability/braces-around-statements.html>`_, "Yes"
    `google-readability-function-size <google/readability-function-size.html>`_, `readability-function-size <readability/function-size.html>`_,
@@ -507,7 +509,7 @@ Clang-Tidy Checks
    `hicpp-new-delete-operators <hicpp/new-delete-operators.html>`_, `misc-new-delete-overloads <misc/new-delete-overloads.html>`_,
    `hicpp-no-array-decay <hicpp/no-array-decay.html>`_, `cppcoreguidelines-pro-bounds-array-to-pointer-decay <cppcoreguidelines/pro-bounds-array-to-pointer-decay.html>`_,
    `hicpp-no-malloc <hicpp/no-malloc.html>`_, `cppcoreguidelines-no-malloc <cppcoreguidelines/no-malloc.html>`_,
-   `hicpp-noexcept-move <hicpp/noexcept-move.html>`_, `performance-noexcept-move-constructor <performance/noexcept-move-constructor.html>`_, "Yes"
+   `hicpp-noexcept-move <hicpp/noexcept-move.html>`_, `performance-noexcept-move-constructor <performance/noexcept-move-constructor.html>`_,
    `hicpp-special-member-functions <hicpp/special-member-functions.html>`_, `cppcoreguidelines-special-member-functions <cppcoreguidelines/special-member-functions.html>`_,
    `hicpp-static-assert <hicpp/static-assert.html>`_, `misc-static-assert <misc/static-assert.html>`_, "Yes"
    `hicpp-undelegated-constructor <hicpp/undelegated-constructor.html>`_, `bugprone-undelegated-constructor <bugprone/undelegated-constructor.html>`_,

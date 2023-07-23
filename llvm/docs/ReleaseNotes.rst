@@ -99,6 +99,9 @@ Changes to building LLVM
 Changes to TableGen
 -------------------
 
+* Named arguments are supported. Arguments can be specified in the form of
+  ``name=value``.
+
 Changes to Interprocedural Optimizations
 ----------------------------------------
 
@@ -162,6 +165,13 @@ Changes to the AMDGPU Backend
 
 * llvm.exp2.f32 and llvm.exp.f32 are now lowered accurately. Use
   llvm.amdgcn.exp2.f32 to access the old behavior for llvm.exp2.f32.
+
+* Implemented new 1ulp IEEE lowering strategy for float reciprocal
+  which saves 2 instructions. This is used by default for OpenCL on
+  gfx9+. With ``contract`` flags, this will fold into a 1 ulp rsqrt.
+
+* Implemented new 2ulp IEEE lowering strategy for float
+  reciprocal. This is used by default for OpenCL on gfx9+.
 
 Changes to the ARM Backend
 --------------------------
@@ -260,6 +270,7 @@ Changes to the RISC-V Backend
   widening mul-add) extensions.
 * Added assembler/disassembler support for the experimental Zacas (atomic
   compare-and-swap) extension.
+* Zvfh extension version was upgraded to 1.0 and is no longer experimental.
 
 Changes to the WebAssembly Backend
 ----------------------------------
@@ -277,7 +288,11 @@ Changes to the X86 Backend
 
 * ``__builtin_unpredictable`` (unpredictable metadata in LLVM IR), is handled by X86 Backend.
   ``X86CmovConversion`` pass now respects this builtin and does not convert CMOVs to branches.
-
+* Add support for the ``PBNDKB`` instruction.
+* Support ISA of ``SHA512``.
+* Support ISA of ``SM3``.
+* Support ISA of ``SM4``.
+* Support ISA of ``AVX-VNNI-INT16``.
 
 Changes to the OCaml bindings
 -----------------------------

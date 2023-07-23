@@ -1942,10 +1942,8 @@ SDValue SelectionDAG::getCondCode(ISD::CondCode Cond) {
 
 SDValue SelectionDAG::getVScale(const SDLoc &DL, EVT VT, APInt MulImm,
                                 bool ConstantFold) {
-  assert(MulImm.getSignificantBits() <= VT.getSizeInBits() &&
-         "Immediate does not fit VT");
-
-  MulImm = MulImm.sextOrTrunc(VT.getSizeInBits());
+  assert(MulImm.getBitWidth() == VT.getSizeInBits() &&
+         "APInt size does not match type size!");
 
   if (ConstantFold) {
     const MachineFunction &MF = getMachineFunction();
@@ -5751,7 +5749,8 @@ SDValue SelectionDAG::getNode(unsigned Opcode, const SDLoc &DL, EVT VT,
     if (OpOpcode == ISD::UNDEF)
       return getUNDEF(VT);
     if (OpOpcode == ISD::VSCALE && !NewNodesMustHaveLegalTypes)
-      return getVScale(DL, VT, N1.getConstantOperandAPInt(0));
+      return getVScale(DL, VT,
+                       N1.getConstantOperandAPInt(0).trunc(VT.getSizeInBits()));
     break;
   case ISD::ANY_EXTEND_VECTOR_INREG:
   case ISD::ZERO_EXTEND_VECTOR_INREG:
@@ -9652,6 +9651,23 @@ SDValue SelectionDAG::getNode(unsigned Opcode, const SDLoc &DL, SDVTList VTList,
            VTList.VTs[0] == Ops[0].getValueType() &&
            VTList.VTs[0] == Ops[1].getValueType() &&
            "Binary operator types must match!");
+    break;
+  }
+  case ISD::FFREXP: {
+    assert(VTList.NumVTs == 2 && Ops.size() == 1 && "Invalid ffrexp op!");
+    assert(VTList.VTs[0].isFloatingPoint() && VTList.VTs[1].isInteger() &&
+           VTList.VTs[0] == Ops[0].getValueType() && "frexp type mismatch");
+
+    if (const ConstantFPSDNode *C = dyn_cast<ConstantFPSDNode>(Ops[0])) {
+      int FrexpExp;
+      APFloat FrexpMant =
+          frexp(C->getValueAPF(), FrexpExp, APFloat::rmNearestTiesToEven);
+      SDValue Result0 = getConstantFP(FrexpMant, DL, VTList.VTs[0]);
+      SDValue Result1 =
+          getConstant(FrexpMant.isFinite() ? FrexpExp : 0, DL, VTList.VTs[1]);
+      return getNode(ISD::MERGE_VALUES, DL, VTList, {Result0, Result1}, Flags);
+    }
+
     break;
   }
   case ISD::STRICT_FP_EXTEND:

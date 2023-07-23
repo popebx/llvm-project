@@ -3312,7 +3312,7 @@ bool AMDGPULegalizerInfo::legalizeFExp(MachineInstr &MI,
                                        MachineIRBuilder &B) const {
   Register Dst = MI.getOperand(0).getReg();
   Register X = MI.getOperand(1).getReg();
-  unsigned Flags = MI.getFlags();
+  const unsigned Flags = MI.getFlags();
   MachineFunction &MF = B.getMF();
   MachineRegisterInfo &MRI = *B.getMRI();
   LLT Ty = MRI.getType(Dst);
@@ -3375,7 +3375,7 @@ bool AMDGPULegalizerInfo::legalizeFExp(MachineInstr &MI,
   //    q = r + (r^2)/2! + (r^3)/3! + (r^4)/4! + (r^5)/5!
   //
   //    e^x = (2^m) * ( (2^(j/64)) + q*(2^(j/64)) )
-
+  const unsigned FlagsNoContract = Flags & ~MachineInstr::FmContract;
   Register PH, PL;
 
   if (ST.hasFastFMAF32()) {
@@ -3414,7 +3414,9 @@ bool AMDGPULegalizerInfo::legalizeFExp(MachineInstr &MI,
   }
 
   auto E = B.buildFRint(Ty, PH, Flags);
-  auto PHSubE = B.buildFSub(Ty, PH, E, Flags);
+
+  // It is unsafe to contract this fsub into the PH multiply.
+  auto PHSubE = B.buildFSub(Ty, PH, E, FlagsNoContract);
   auto A = B.buildFAdd(Ty, PHSubE, PL, Flags);
   auto IntE = B.buildFPTOSI(LLT::scalar(32), E);
 
@@ -4806,9 +4808,9 @@ bool AMDGPULegalizerInfo::legalizeFDIVFastIntrin(MachineInstr &MI,
   auto Abs = B.buildFAbs(S32, RHS, Flags);
   const APFloat C0Val(1.0f);
 
-  auto C0 = B.buildConstant(S32, 0x6f800000);
-  auto C1 = B.buildConstant(S32, 0x2f800000);
-  auto C2 = B.buildConstant(S32, llvm::bit_cast<uint32_t>(1.0f));
+  auto C0 = B.buildFConstant(S32, 0x1p+96f);
+  auto C1 = B.buildFConstant(S32, 0x1p-32f);
+  auto C2 = B.buildFConstant(S32, 1.0f);
 
   auto CmpRes = B.buildFCmp(CmpInst::FCMP_OGT, S1, Abs, C0, Flags);
   auto Sel = B.buildSelect(S32, CmpRes, C1, C2, Flags);

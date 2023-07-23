@@ -129,6 +129,7 @@ Clang-Tidy Checks
    `bugprone-suspicious-semicolon <bugprone/suspicious-semicolon.html>`_, "Yes"
    `bugprone-suspicious-string-compare <bugprone/suspicious-string-compare.html>`_, "Yes"
    `bugprone-swapped-arguments <bugprone/swapped-arguments.html>`_, "Yes"
+   `bugprone-switch-missing-default-case <bugprone/switch-missing-default-case.html>`_,
    `bugprone-terminating-continue <bugprone/terminating-continue.html>`_, "Yes"
    `bugprone-throw-keyword-missing <bugprone/throw-keyword-missing.html>`_,
    `bugprone-too-small-loop-variable <bugprone/too-small-loop-variable.html>`_,
@@ -245,6 +246,7 @@ Clang-Tidy Checks
    `llvmlibc-restrict-system-libc-headers <llvmlibc/restrict-system-libc-headers.html>`_, "Yes"
    `misc-confusable-identifiers <misc/confusable-identifiers.html>`_,
    `misc-const-correctness <misc/const-correctness.html>`_, "Yes"
+   `misc-correct-include-name <misc/correct-include-name.html>`_, "Yes"
    `misc-definitions-in-headers <misc/definitions-in-headers.html>`_, "Yes"
    `misc-misleading-bidirectional <misc/misleading-bidirectional.html>`_,
    `misc-misleading-identifier <misc/misleading-identifier.html>`_,
@@ -254,6 +256,7 @@ Clang-Tidy Checks
    `misc-non-copyable-objects <misc/non-copyable-objects.html>`_,
    `misc-non-private-member-variables-in-classes <misc/non-private-member-variables-in-classes.html>`_,
    `misc-redundant-expression <misc/redundant-expression.html>`_, "Yes"
+   `misc-replace-cstring-slicing <misc/replace-cstring-slicing.html>`_, "Yes"
    `misc-static-assert <misc/static-assert.html>`_, "Yes"
    `misc-throw-by-value-catch-by-reference <misc/throw-by-value-catch-by-reference.html>`_,
    `misc-unconventional-assign-operator <misc/unconventional-assign-operator.html>`_,
@@ -482,7 +485,7 @@ Clang-Tidy Checks
    `hicpp-new-delete-operators <hicpp/new-delete-operators.html>`_, `misc-new-delete-overloads <misc/new-delete-overloads.html>`_,
    `hicpp-no-array-decay <hicpp/no-array-decay.html>`_, `cppcoreguidelines-pro-bounds-array-to-pointer-decay <cppcoreguidelines/pro-bounds-array-to-pointer-decay.html>`_,
    `hicpp-no-malloc <hicpp/no-malloc.html>`_, `cppcoreguidelines-no-malloc <cppcoreguidelines/no-malloc.html>`_,
-   `hicpp-noexcept-move <hicpp/noexcept-move.html>`_, `performance-noexcept-move-constructor <performance/noexcept-move-constructor.html>`_, "Yes"
+   `hicpp-noexcept-move <hicpp/noexcept-move.html>`_, `performance-noexcept-move-constructor <performance/noexcept-move-constructor.html>`_,
    `hicpp-special-member-functions <hicpp/special-member-functions.html>`_, `cppcoreguidelines-special-member-functions <cppcoreguidelines/special-member-functions.html>`_,
    `hicpp-static-assert <hicpp/static-assert.html>`_, `misc-static-assert <misc/static-assert.html>`_, "Yes"
    `hicpp-undelegated-constructor <hicpp/undelegated-constructor.html>`_, `bugprone-undelegated-constructor <bugprone/undelegated-constructor.html>`_,

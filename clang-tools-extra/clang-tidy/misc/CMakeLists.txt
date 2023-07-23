@@ -17,6 +17,7 @@ add_custom_target(genconfusable DEPENDS Confusables.inc)
 
 add_clang_library(clangTidyMiscModule
   ConstCorrectnessCheck.cpp
+  CorrectIncludeNameCheck.cpp
   DefinitionsInHeadersCheck.cpp
   ConfusableIdentifierCheck.cpp
   MiscTidyModule.cpp
@@ -28,6 +29,7 @@ add_clang_library(clangTidyMiscModule
   NonCopyableObjects.cpp
   NonPrivateMemberVariablesInClassesCheck.cpp
   RedundantExpressionCheck.cpp
+  ReplaceCstringSlicingCheck.cpp
   StaticAssertCheck.cpp
   ThrowByValueCatchByReferenceCheck.cpp
   UnconventionalAssignOperatorCheck.cpp

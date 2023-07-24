@@ -114,6 +114,11 @@ Improvements to clang-tidy
 New checks
 ^^^^^^^^^^
 
+- New :doc:`bugprone-empty-catch
+  <clang-tidy/checks/bugprone/empty-catch>` check.
+
+  Detects and suggests addressing issues with empty catch statements.
+
 - New :doc:`bugprone-multiple-new-in-one-expression
   <clang-tidy/checks/bugprone/multiple-new-in-one-expression>` check.
 
@@ -424,13 +429,10 @@ Changes in existing checks
   when using structured bindings.
 
 - In :doc:`modernize-use-default-member-init
-  <clang-tidy/checks/modernize/use-default-member-init>` count template
-  constructors toward hand written constructors so that they are skipped if more
-  than one exists.
-
-- Fixed crash in :doc:`modernize-use-default-member-init
-  <clang-tidy/checks/modernize/use-default-member-init>` with array members which
-  are value initialized.
+  <clang-tidy/checks/modernize/use-default-member-init>` check, template
+  constructors are now counted towards hand-written constructors and skipped
+  if more than one exists. Additionally, a crash that occurred with array
+  members being value-initialized has been fixed.
 
 - Fixed false positive in :doc:`modernize-use-equals-default
   <clang-tidy/checks/modernize/use-equals-default>` check for special member
@@ -505,7 +507,7 @@ Changes in existing checks
 
 - Fixed an issue in :doc:`readability-identifier-naming
   <clang-tidy/checks/readability/identifier-naming>` when specifying an empty
-  string for ``Prefix`` or ``Suffix`` options could result in the style not
+  string for `Prefix` or `Suffix` options could result in the style not
   being used.
 
 - Improved the performance of the :doc:`readability-identifier-naming
@@ -516,12 +518,10 @@ Changes in existing checks
   be unnecessarily emitted for explicit cast using direct list initialization.
 
 - Added support to optionally ignore user-defined literals in
-  :doc:`readability-magic-numbers<clang-tidy/checks/readability/magic-numbers>`.
-
-- Improved :doc:`readability-magic-numbers
-  <clang-tidy/checks/readability/magic-numbers>` check, now allows for
-  magic numbers in type aliases such as ``using`` and ``typedef`` declarations if
-  the new ``IgnoreTypeAliases`` option is set to true.
+  :doc:`readability-magic-numbers <clang-tidy/checks/readability/magic-numbers>`
+  check and improved it to allow magic numbers in type aliases such as ``using``
+  and ``typedef`` declarations if the new `IgnoreTypeAliases` option is set to
+  `true`.
 
 - Fixed a false positive in :doc:`readability-misleading-indentation
   <clang-tidy/checks/readability/misleading-indentation>` check when warning would
@@ -539,7 +539,7 @@ Changes in existing checks
   <clang-tidy/checks/readability/redundant-string-cstr>` check to recognise
   unnecessary ``std::string::c_str()`` and ``std::string::data()`` calls in
   arguments to ``std::print``, ``std::format`` or other functions listed in
-  the ``StringParameterFunction`` check option.
+  the `StringParameterFunction` check option.
 
 - Improved :doc:`readability-static-accessed-through-instance
   <clang-tidy/checks/readability/static-accessed-through-instance>` check to

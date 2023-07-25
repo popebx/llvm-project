@@ -17,91 +17,45 @@ using namespace clang::ast_matchers;
 namespace clang::tidy::misc {
 
 void ReplaceCstringSlicingCheck::registerMatchers(MatchFinder *Finder) {
-  constexpr std::string_view baseClassName = "CStringT<char, StrTraitMFC<>>";
-  constexpr std::string_view derivedClassName = "CStringEx";
-  const auto OfBaseClass = ofClass(cxxRecordDecl().bind("BaseDecl"));
-  const auto IsDerivedFromBaseDecl =
-      cxxRecordDecl(hasName(derivedClassName),
-                    isDerivedFrom(equalsBoundNode("BaseDecl")))
-          .bind("DerivedDecl");
-  const auto HasTypeDerivedFromBaseDecl =
-      anyOf(hasType(IsDerivedFromBaseDecl),
-            hasType(references(IsDerivedFromBaseDecl)));
-  const auto IsCallToBaseClass = hasParent(cxxConstructorDecl(
-      ofClass(isSameOrDerivedFrom(equalsBoundNode("DerivedDecl"))),
-      hasAnyConstructorInitializer(allOf(
-          isBaseInitializer(), withInitializer(equalsBoundNode("Call"))))));
 
-  // Assignment slicing: "a = b;" and "a = std::move(b);" variants.
-  const auto SlicesObjectInAssignment =
-      callExpr(expr().bind("Call"),
-               callee(cxxMethodDecl(anyOf(isCopyAssignmentOperator(),
+
+  const auto isCStringEx =
+      anyOf(hasType(cxxRecordDecl(hasName("CStringEx"))),
+            hasType(references(cxxRecordDecl(hasName("CStringEx")))));
+  const auto isCstringT = ofClass(cxxRecordDecl(
+      hasName("CStringT"), classTemplateSpecializationDecl(hasTemplateArgument(
+                               0, refersToType(asString("char"))))));
+
+  const auto sliceInAssignment =
+      callExpr(callee(cxxMethodDecl(anyOf(isCopyAssignmentOperator(),
                                           isMoveAssignmentOperator()),
-                                    OfBaseClass)),
-               hasArgument(1, HasTypeDerivedFromBaseDecl));
-
-  // Construction slicing: "A a{b};" and "f(b);" variants. Note that in case of
-  // slicing the letter will create a temporary and therefore call a ctor.
-  const auto SlicesObjectInCtor = cxxConstructExpr(
-      expr().bind("Call"),
+                                    isCstringT)),
+               hasArgument(1, isCStringEx),
+               has(implicitCastExpr(has(
+                   implicitCastExpr(has(declRefExpr().bind("variable")))))));
+  const auto sliceInConstructor = cxxConstructExpr(
       hasDeclaration(cxxConstructorDecl(
-          anyOf(isCopyConstructor(), isMoveConstructor()), OfBaseClass)),
-      hasArgument(0, HasTypeDerivedFromBaseDecl),
-      // We need to disable matching on the call to the base copy/move
-      // constructor in DerivedDecl's constructors.
-      unless(IsCallToBaseClass));
-
-  const auto construction = cxxConstructExpr(
-      hasDeclaration(
-          cxxConstructorDecl(anyOf(isCopyConstructor(), isMoveConstructor()),
-                             hasName("CString"))
-              .bind("BaseClass")),
-      hasArgument(
-          0, anyOf(hasType(cxxRecordDecl(hasName("CStringEx")).bind("Derived")),
-                   hasType(references(
-                       cxxRecordDecl(hasName("CStringEx")).bind("Derived"))))),
+          anyOf(isCopyConstructor(), isMoveConstructor()), isCstringT)),
+      hasArgument(0, isCStringEx),
       has(implicitCastExpr(
           has(implicitCastExpr(has(declRefExpr().bind("variable")))))));
-
-  Finder->addMatcher(
-      traverse(TK_AsIs, expr(SlicesObjectInAssignment).bind("Call")), this);
-  Finder->addMatcher(traverse(TK_AsIs, construction), this);
+  Finder->addMatcher(traverse(TK_AsIs, expr(sliceInConstructor)),
+                     this);
+  Finder->addMatcher(traverse(TK_AsIs, expr(sliceInAssignment)),
+                     this);
 }
 
-void ReplaceCstringSlicingCheck::check(const MatchFinder::MatchResult &Result) {
-  const auto *BaseDecl = Result.Nodes.getNodeAs<CXXRecordDecl>("BaseDecl");
-  const auto *DerivedDecl =
-      Result.Nodes.getNodeAs<CXXRecordDecl>("DerivedDecl");
-  const auto *Call = Result.Nodes.getNodeAs<CXXConstructExpr>("Call");
+void ReplaceCstringSlicingCheck::check(const MatchFinder::MatchResult &Result) {  
   const auto *variable = Result.Nodes.getNodeAs<DeclRefExpr>("variable");
 
   assert(variable != nullptr);
-  /* assert(BaseDecl != nullptr);
-   assert(DerivedDecl != nullptr);
-   assert(Call != nullptr);*/
-
-  // Warn when slicing member variables.
-  // const auto &BaseLayout =
-  //    BaseDecl->getASTContext().getASTRecordLayout(BaseDecl);
-  // const auto &DerivedLayout =
-  //    DerivedDecl->getASTContext().getASTRecordLayout(DerivedDecl);
-  // const CharUnits StateSize =
-  //    DerivedLayout.getDataSize() - BaseLayout.getDataSize();
-  // if (StateSize.isPositive()) {
-  //    auto *arg = Call->getArg(0);
-  
-  //  auto sourceRange = Call->getSourceRange();
+ 
   auto &SM = Result.Context->getSourceManager();
   auto &LO = Result.Context->getLangOpts();
   auto charRange = Lexer::getAsCharRange(variable->getSourceRange(), SM, LO);
-  
-  /*diag(Call->getExprLoc(), "slicing object from type %0 to %1 discards "
-                           "%2 bytes of state")
-      << DerivedDecl << BaseDecl <<
-     static_cast<int>(StateSize.getQuantity());*/
+
   diag(charRange.getEnd(), "Slicing CStringEx to CString!")
       << FixItHint::CreateInsertion(charRange.getEnd(), ".GetString()");
-  // }
 }
 
 } // namespace clang::tidy::misc
